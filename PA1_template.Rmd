@@ -7,19 +7,38 @@ output:
 
 
 ## Loading and preprocessing the data
-
-
+require(ggplot2)
+require(dplyr)
+activity_data <- read.csv(unz("activity.zip", "activity.csv"))
 
 ## What is mean total number of steps taken per day?
 
+total_steps_perday <- tapply(activity_data$steps, activity_data$date, sum, na.rm=TRUE)
+
+qplot(total_steps_perday)+geom_histogram()+geom_vline(aes(xintercept=mean(total_steps_perday), color="red"))+geom_vline(aes(xintercept=median(total_steps_perday), color="green"))+scale_color_discrete(name="Legend", labels=c("Mean", "Median"))
+
+mean(total_steps_perday)
+median(total_steps_perday)
 
 
 ## What is the average daily activity pattern?
 
+activity_pattern <- tapply(activity_data$steps, activity_data$interval, sum, na.rm=TRUE)
+qplot(x=names(activity_pattern), y=unname(activity_pattern))+geom_line(aes(group=name))+xlab("Time of Day")+ylab("Average number of steps")
 
 
 ## Imputing missing values
 
+sum(!complete.cases(activity_data))
 
+activity_data$steps[is.na(activity_data$steps)] <- with(activity_data, ave(steps, interval, FUN = function(x) mean(x, na.rm = TRUE)))[is.na(activity_data$steps)]
+
+total_steps_perday <- tapply(activity_data$steps, activity_data$date, sum)
+
+qplot(total_steps_perday)+geom_histogram()+geom_vline(aes(xintercept=mean(total_steps_perday), color="red"))+geom_vline(aes(xintercept=median(total_steps_perday), color="green"))+scale_color_discrete(name="Legend", labels=c("Mean", "Median"))
+
+mean(total_steps_perday)
+median(total_steps_perday)
 
 ## Are there differences in activity patterns between weekdays and weekends?
+
