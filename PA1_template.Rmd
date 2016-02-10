@@ -8,37 +8,44 @@ output:
 
 ## Loading and preprocessing the data
 require(ggplot2)
-require(dplyr)
 activity_data <- read.csv(unz("activity.zip", "activity.csv"))
+activity_data$date <- as.Date(activity_data$date)
 
 ## What is mean total number of steps taken per day?
 
-total_steps_perday <- tapply(activity_data$steps, activity_data$date, sum, na.rm=TRUE)
+total_steps_perday <- aggregate(steps~date, data=activity_data, sum)
 
-qplot(total_steps_perday)+geom_histogram()+geom_vline(aes(xintercept=mean(total_steps_perday), color="red"))+geom_vline(aes(xintercept=median(total_steps_perday), color="green"))+scale_color_discrete(name="Legend", labels=c("Mean", "Median"))
+qplot(total_steps_perday$steps)+geom_histogram()+xlab("Total steps per day")
 
-mean(total_steps_perday)
-median(total_steps_perday)
+mean(total_steps_perday$steps)
+median(total_steps_perday$steps)
 
 
 ## What is the average daily activity pattern?
 
-activity_pattern <- tapply(activity_data$steps, activity_data$interval, sum, na.rm=TRUE)
-qplot(x=names(activity_pattern), y=unname(activity_pattern))+geom_line(aes(group=name))+xlab("Time of Day")+ylab("Average number of steps")
+activity_pattern <- aggregate(steps~interval, data=activity_data, mean)
 
+ggplot(activity_pattern)+geom_line(aes(x=interval, y=steps))+xlab("Time of Day (5 min intervals)")+ylab("Average number of steps")
 
 ## Imputing missing values
 
 sum(!complete.cases(activity_data))
 
-activity_data$steps[is.na(activity_data$steps)] <- with(activity_data, ave(steps, interval, FUN = function(x) mean(x, na.rm = TRUE)))[is.na(activity_data$steps)]
+activity_data$steps[is.na(activity_data$steps)] <- with(activity_data, ave(steps, interval, FUN = function(x){round(mean(x, na.rm=T, trim=0))}))[is.na(activity_data$steps)]
 
-total_steps_perday <- tapply(activity_data$steps, activity_data$date, sum)
+total_steps_perday_rm <- aggregate(steps~date, data=activity_data, sum)
 
-qplot(total_steps_perday)+geom_histogram()+geom_vline(aes(xintercept=mean(total_steps_perday), color="red"))+geom_vline(aes(xintercept=median(total_steps_perday), color="green"))+scale_color_discrete(name="Legend", labels=c("Mean", "Median"))
+qplot(total_steps_perday_rm$steps)+geom_histogram()
 
-mean(total_steps_perday)
-median(total_steps_perday)
+mean(total_steps_perday_rm$steps)
+median(total_steps_perday_rm$steps)
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
+activity_data$weekday[weekdays(as.Date(activity_data$date))!=c("Sunday","Saturday")] <- "weekday"
+activity_data$weekday[weekdays(as.Date(activity_data$date))==c("Sunday","Saturday")] <- "weekend"
+activity_data$weekday <- as.factor(activity_data$weekday)
+
+activity_pattern_weekday <- aggregate(steps~interval + weekday, data=activity_data, mean)
+
+ggplot(activity_pattern_weekday)+geom_line(aes(x=interval, y=steps))+xlab("Time of Day (5 min intervals)")+ylab("Average number of steps")+facet_grid(.~weekday)
