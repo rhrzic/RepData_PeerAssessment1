@@ -89,7 +89,7 @@ median(total_steps_perday_rm$steps)
 
 ## 5. Are there differences in activity patterns between weekdays and weekends?
 
-We start the last question off by creating a new column in our dataset called weekday, which is a factor variable with 2 levels: the date can either we a weekday or a weekend.
+We start the last question off by creating a new column in our dataset called weekday, which is a factor variable with 2 levels: the date can either we a weekday or a weekend. Note that we're now using the imputed dataset from question 4. 
 
 ```{r}
 activity_data$weekday[weekdays(as.Date(activity_data$date))!=c("Sunday","Saturday")] <- "weekday"

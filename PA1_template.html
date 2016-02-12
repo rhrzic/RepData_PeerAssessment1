@@ -120,7 +120,7 @@ activity_data$date &lt;- as.Date(activity_data$date)</code></pre>
 </div>
 <div id="are-there-differences-in-activity-patterns-between-weekdays-and-weekends" class="section level2">
 <h2>5. Are there differences in activity patterns between weekdays and weekends?</h2>
-<p>We start the last question off by creating a new column in our dataset called weekday, which is a factor variable with 2 levels: the date can either we a weekday or a weekend.</p>
+<p>We start the last question off by creating a new column in our dataset called weekday, which is a factor variable with 2 levels: the date can either we a weekday or a weekend. Note that we’re now using the imputed dataset from question 4.</p>
 <pre class="r"><code>activity_data$weekday[weekdays(as.Date(activity_data$date))!=c(&quot;Sunday&quot;,&quot;Saturday&quot;)] &lt;- &quot;weekday&quot;
 activity_data$weekday[weekdays(as.Date(activity_data$date))==c(&quot;Sunday&quot;,&quot;Saturday&quot;)] &lt;- &quot;weekend&quot;
 activity_data$weekday &lt;- as.factor(activity_data$weekday)</code></pre>
