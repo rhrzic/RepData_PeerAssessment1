@@ -167,7 +167,7 @@ We then calculate the mean of the number of steps for each of the 5 minute inter
 ```r
 activity_pattern_weekday <- aggregate(steps~interval + weekday, data=activity_data, mean)
 
-ggplot(activity_pattern_weekday)+geom_line(aes(x=interval, y=steps))+xlab("Time of Day (5 min intervals)")+ylab("Average number of steps")+facet_grid(.~weekday)
+ggplot(activity_pattern_weekday)+geom_line(aes(x=interval, y=steps))+xlab("Time of Day (5 min intervals)")+ylab("Average number of steps")+facet_grid(weekday~.)
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-14-1.png)
