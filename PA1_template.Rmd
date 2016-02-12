@@ -50,6 +50,12 @@ We then display this data using ggplot's geom_line, which graphically displays t
 ggplot(activity_pattern)+geom_line(aes(x=interval, y=steps))+xlab("Time of Day (5 min intervals)")+ylab("Average number of steps")
 ```
 
+The interval with the maximum number of steps (thus maximum activity) is
+
+```{r}
+activity_pattern$interval[which.max(activity_pattern$steps)]
+```
+
 ## 4. Imputing missing values
 
 The number of incomplete cases in our data set is 

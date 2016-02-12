@@ -81,6 +81,17 @@ ggplot(activity_pattern)+geom_line(aes(x=interval, y=steps))+xlab("Time of Day (
 
 ![](PA1_template_files/figure-html/unnamed-chunk-6-1.png)
 
+The interval with the maximum number of steps (thus maximum activity) is
+
+
+```r
+activity_pattern$interval[which.max(activity_pattern$steps)]
+```
+
+```
+## [1] 835
+```
+
 ## 4. Imputing missing values
 
 The number of incomplete cases in our data set is 
@@ -119,7 +130,7 @@ qplot(total_steps_perday_rm$steps)+geom_histogram()
 ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-10-1.png)
+![](PA1_template_files/figure-html/unnamed-chunk-11-1.png)
 
 We also recalculate the mean and median, which are now
 
@@ -159,4 +170,4 @@ activity_pattern_weekday <- aggregate(steps~interval + weekday, data=activity_da
 ggplot(activity_pattern_weekday)+geom_line(aes(x=interval, y=steps))+xlab("Time of Day (5 min intervals)")+ylab("Average number of steps")+facet_grid(.~weekday)
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-13-1.png)
+![](PA1_template_files/figure-html/unnamed-chunk-14-1.png)
